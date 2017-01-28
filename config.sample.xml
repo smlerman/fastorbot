@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config>
+    <global>
+        <separators>
+            <separator>is</separator>
+            <separator>are</separator>
+            <separator>was</separator>
+        </separators>
+        <command_separators>
+            <command_separator>,</command_separator>
+            <command_separator>:</command_separator>
+            <command_separator>-</command_separator>
+        </command_separators>
+        <responses>
+            <response>reply</response>
+            <response>action</response>
+        </responses>
+        <database type="sqlite" database="/home/fastorbot/fastorbot.db" />
+    </global>
+    <servers>
+        <server name="Freenode"	nick="fastorbot">
+            <nickserv nick="nickserv" command="identify" password="password" />
+            <hosts>
+                <host name="irc.freenode.net" port="6667" />
+            </hosts>
+            <channels>
+                <channel name="#fastorbot" onjoin-factoid="false" />
+            </channels>
+        </server>
+    </servers>
+</config>
+ 
