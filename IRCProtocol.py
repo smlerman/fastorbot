@@ -23,5 +23,4 @@ class IRCProtocol(asyncio.Protocol):
 
     def connection_lost(self, exc):
         print('The server closed the connection')
-        print('Stop the event loop')
-        self.loop.stop()
+        self.owner.on_disconnect(exc)

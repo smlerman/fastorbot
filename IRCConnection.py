@@ -65,13 +65,21 @@ class IRCConnection(object):
     
     def on_receive(self, data):
         try:
-            data_string = data.decode()
+            data_string = data.decode(errors="replace")
         except UnicodeDecodeError:
-            pass
+            return
         
         irc_messages = self.parse_server_data(data_string)
         for irc_message in irc_messages:
             self.handle_message(irc_message)
+    
+    def on_disconnect(self, exc):
+        self.reconnect()
+    
+    def reconnect(self):
+        self.disconnect()
+        time.sleep(5)
+        self.connect()
     
     def parse_server_data(self, data_string):
         # Set last activity timer
@@ -162,7 +170,6 @@ class IRCConnection(object):
     
     @staticmethod
     def irc_callback_user_join(irc_connection, irc_message, arguments):
-        #irc_connection.current_channels[irc_message.destination].add_user(irc_message.source.nick, irc_message.source.ident, irc_message.source.host)
         irc_user = IRCUser(irc_message.source.nick, irc_message.source.ident, irc_message.source.host)
         irc_connection.users[irc_user.nick] = irc_user
         irc_connection.current_channels[irc_message.destination].add_irc_user(irc_user)
@@ -231,7 +238,7 @@ class IRCConnection(object):
                 
                 irc_user = IRCUser(nick, None, None, voice, op)
                 irc_connection.users[irc_user.nick] = irc_user
-                #irc_connection.current_channels[irc_message.destination].add_irc_user(irc_user)
+                
                 if channel in irc_connection.current_channels:
                     irc_connection.current_channels[channel].add_irc_user(irc_user)
     
@@ -243,6 +250,7 @@ class IRCConnection(object):
     # WHOIS responses
     #####
     
+    @staticmethod
     def irc_callback_whois_user(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
         nick = whois_data[0]
@@ -268,26 +276,32 @@ class IRCConnection(object):
                 #irc_user.realname = whois_data[3]
         """
     
+    @staticmethod
     def irc_callback_whois_server(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
         server = whois_data[1]
         server_info = whois_data[2]
     
+    @staticmethod
     def irc_callback_whois_operator(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
         is_oper = True
     
+    @staticmethod
     def irc_callback_whois_idle(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
         idle_time = whois_data[1]
     
+    @staticmethod
     def irc_callback_whois_channels(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
-        whois_data.pop(0) #Don't want user's nick in the channel list
+        # Remove user's nick from the channel list
+        whois_data.pop(0)
         channels = list()
         for channel in whois_data:
             channels.append(channel.lstrip(":"))
     
+    @staticmethod
     def irc_callback_whois_end(irc_connection, irc_message, arguments):
         whois_data = irc_message.rest.split(" ")
         nick = whois_data[0]
@@ -301,9 +315,7 @@ class IRCConnection(object):
         last_activity_delta = datetime.datetime.now() - self.last_activity
         if last_activity_delta.seconds > 600:
             print("Timed out")
-            self.disconnect()
-            time.sleep(5)
-            self.connect()
+            self.reconnect()
         
         self.loop.call_later(60, self.check_connection_timeout)
     
