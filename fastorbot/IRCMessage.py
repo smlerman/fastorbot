@@ -1,6 +1,6 @@
 import logging
 
-from IRCUser import *
+from fastorbot.IRCUser import *
 
 class IRCMessage(object):
     

@@ -10,10 +10,10 @@ import sys
 import time
 import xml.etree.ElementTree as etree
 
-from BotCommand import *
-from BotUser import *
-from IRCConnection import *
-from SQLiteDatabase import *
+from fastorbot.BotCommand import *
+from fastorbot.BotUser import *
+from fastorbot.IRCConnection import *
+from fastorbot.SQLiteDatabase import *
 
 class Fastorbot(object):
     

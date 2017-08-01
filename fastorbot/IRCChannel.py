@@ -1,4 +1,4 @@
-from IRCUser import *
+from fastorbot.IRCUser import *
 
 class IRCChannel(object):
     def __init__(self, channel):

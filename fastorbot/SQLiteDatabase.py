@@ -3,8 +3,8 @@ import logging
 import os
 import sqlite3
 
-from BotUser import *
-from Factoid import *
+from fastorbot.BotUser import *
+from fastorbot.Factoid import *
 
 class SQLiteDatabase(object):
     def __init__(self, dsn):

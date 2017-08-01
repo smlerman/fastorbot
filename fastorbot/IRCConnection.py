@@ -4,11 +4,11 @@ import logging
 import sys
 import time
 
-from IRCCallback import *
-from IRCChannel import *
-from IRCMessage import *
-from IRCProtocol import *
-from IRCUser import *
+from fastorbot.IRCCallback import *
+from fastorbot.IRCChannel import *
+from fastorbot.IRCMessage import *
+from fastorbot.IRCProtocol import *
+from fastorbot.IRCUser import *
 
 class IRCConnection(object):
     def __init__(self, hostname, hostport, nick):
