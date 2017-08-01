@@ -469,7 +469,6 @@ class Fastorbot(object):
                     irc_connection.loop.call_later(1, self.command_ignore, irc_connection, irc_message, arguments, bot_user)
                     return
         else:
-            # Wait for the whois to return, maximum 10 seconds
             if nick not in irc_connection.waiting_for_whois:
                 irc_connection.send_whois(nick)
             else:
@@ -745,6 +744,3 @@ class Fastorbot(object):
         
         for n in channel_nodes:
             irc_connection.join_channel(n.get("name"))
-
-bot = Fastorbot()
-bot.irc_connect()
